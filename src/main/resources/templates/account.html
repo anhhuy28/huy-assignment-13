@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create New Bank Account</title>
+</head>
+<body>
+<h1>Create New Bank Account</h1>
+
+<form th:action="@{/users/{userId}/accounts/{accountId}/edit(userId=${user.userId}, accountId=${account.accountId})}" method="post">
+    <div>
+        Account Name: <input type="text" th:field="${account.accountName}" placeholder="Enter account name"/>
+    </div>
+
+    <div>
+        <input type="submit" value="Create"/>
+    </div>
+</form>
+
+<a th:href="@{/users/{userId}(userId=${user.userId})}">Back to User</a>
+
+</body>
+</html>

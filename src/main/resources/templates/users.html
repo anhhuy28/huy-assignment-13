@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Users List</title>
+</head>
+<body>
+
+<h1>All Users</h1>
+
+<div th:if="${users != null}">
+	<div th:each="user : ${users}">
+
+		<a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.userId}"></a><br />
+
+		<span th:text="'Username: ' + ${user.username}"></span><br />
+		<span th:text="'Full Name: ' + ${user.name}"></span><br />
+		<span th:text="'Password: ' + ${user.password}"></span><br />
+
+		<div th:if="${user.accounts != null && !user.accounts.isEmpty()}">
+			<div th:each="account : ${user.accounts}">
+
+				<a th:href="@{/accounts/{accountId}(accountId=${account.accountId})}" th:text="${account.accountName}"></a><br />
+			</div>
+		</div>
+		<div th:if="${user.accounts == null || user.accounts.isEmpty()}">
+			<p>No accounts found for this user.</p>
+		</div>
+
+		<hr />
+	</div>
+</div>
+
+<div th:if="${users == null || users.isEmpty()}">
+	<p>No users found.</p>
+</div>
+
+</body>
+</html>

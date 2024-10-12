@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+
+<form action="/register" method="POST">
+	<div>
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username">
+	</div>
+
+	<div>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password">
+	</div>
+
+	<div>
+		<label for="name">Full Name:</label>
+		<input type="text" id="name" name="name">
+	</div>
+
+	<hr>
+
+	<div>
+		<h3>Address Information</h3>
+		<label for="addressLine1">Address Line 1:</label>
+		<input type="text" id="addressLine1" name="addressLine1">
+	</div>
+
+	<div>
+		<label for="addressLine2">Address Line 2:</label>
+		<input type="text" id="addressLine2" name="addressLine2">
+	</div>
+
+	<div>
+		<label for="city">City:</label>
+		<input type="text" id="city" name="city">
+	</div>
+
+	<div>
+		<label for="region">Region:</label>
+		<input type="text" id="region" name="region">
+	</div>
+
+	<div>
+		<label for="country">Country:</label>
+		<input type="text" id="country" name="country">
+	</div>
+
+	<div>
+		<label for="zipCode">Zip Code:</label>
+		<input type="text" id="zipCode" name="zipCode">
+	</div>
+
+	<button type="submit">Submit</button>
+</form>
+
+</body>
+</html>
