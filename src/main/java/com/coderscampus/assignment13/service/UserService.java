@@ -54,27 +54,47 @@ public class UserService {
 	}
 
 	public User saveUser(User user, boolean createDefaultAccounts) {
-		if (user.getUserId() == null && createDefaultAccounts) {
+
+		User existingUser = userRepo.findById(user.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+		existingUser.setName(user.getName());
+		existingUser.setUsername(user.getUsername());
+
+		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+			existingUser.setPassword(user.getPassword());
+		}
+
+		Address existingAddress = existingUser.getAddress();
+		Address newAddress = user.getAddress();
+
+		if (existingAddress != null && newAddress != null) {
+			existingAddress.setAddressLine1(newAddress.getAddressLine1());
+			existingAddress.setAddressLine2(newAddress.getAddressLine2());
+			existingAddress.setCity(newAddress.getCity());
+			existingAddress.setRegion(newAddress.getRegion());
+			existingAddress.setCountry(newAddress.getCountry());
+			existingAddress.setZipCode(newAddress.getZipCode());
+		} else if (existingAddress == null && newAddress != null) {
+			existingUser.setAddress(newAddress);
+			newAddress.setUser(existingUser);
+		}
+
+		if (existingUser.getUserId() == null && createDefaultAccounts) {
 			Account checking = new Account();
 			checking.setAccountName("Checking Account");
-			checking.getUsers().add(user);
+			checking.getUsers().add(existingUser);
 
 			Account savings = new Account();
 			savings.setAccountName("Savings Account");
-			savings.getUsers().add(user);
+			savings.getUsers().add(existingUser);
 
-			user.getAccounts().add(checking);
-			user.getAccounts().add(savings);
+			existingUser.getAccounts().add(checking);
+			existingUser.getAccounts().add(savings);
 			accountRepo.save(checking);
 			accountRepo.save(savings);
 		}
 
-		Address address = user.getAddress();
-		if (address != null) {
-			address.setUser(user);
-		}
-
-		return userRepo.save(user);
+		return userRepo.save(existingUser);
 	}
 
 	public void delete(Long userId) {

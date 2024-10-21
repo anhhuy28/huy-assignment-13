@@ -6,20 +6,20 @@
 <body>
 <h1>Register</h1>
 
-<form action="/register" method="POST">
+<form th:action="@{/register}" th:object="${user}" method="POST">
 	<div>
 		<label for="username">Username:</label>
-		<input type="text" id="username" name="username">
+		<input type="text" id="username" th:field="*{username}" placeholder="Enter your username"/>
 	</div>
 
 	<div>
 		<label for="password">Password:</label>
-		<input type="password" id="password" name="password">
+		<input type="password" id="password" th:field="*{password}" placeholder="Enter your password"/>
 	</div>
 
 	<div>
 		<label for="name">Full Name:</label>
-		<input type="text" id="name" name="name">
+		<input type="text" id="name" th:field="*{name}" placeholder="Enter your full name"/>
 	</div>
 
 	<hr>
@@ -27,32 +27,32 @@
 	<div>
 		<h3>Address Information</h3>
 		<label for="addressLine1">Address Line 1:</label>
-		<input type="text" id="addressLine1" name="addressLine1">
+		<input type="text" id="addressLine1" th:field="*{address.addressLine1}" placeholder="Enter your address"/>
 	</div>
 
 	<div>
 		<label for="addressLine2">Address Line 2:</label>
-		<input type="text" id="addressLine2" name="addressLine2">
+		<input type="text" id="addressLine2" th:field="*{address.addressLine2}" placeholder="Enter your address"/>
 	</div>
 
 	<div>
 		<label for="city">City:</label>
-		<input type="text" id="city" name="city">
+		<input type="text" id="city" th:field="*{address.city}" placeholder="Enter your city"/>
 	</div>
 
 	<div>
 		<label for="region">Region:</label>
-		<input type="text" id="region" name="region">
+		<input type="text" id="region" th:field="*{address.region}" placeholder="Enter your region"/>
 	</div>
 
 	<div>
 		<label for="country">Country:</label>
-		<input type="text" id="country" name="country">
+		<input type="text" id="country" th:field="*{address.country}" placeholder="Enter your country"/>
 	</div>
 
 	<div>
 		<label for="zipCode">Zip Code:</label>
-		<input type="text" id="zipCode" name="zipCode">
+		<input type="text" id="zipCode" th:field="*{address.zipCode}" placeholder="Enter your zip code"/>
 	</div>
 
 	<button type="submit">Submit</button>

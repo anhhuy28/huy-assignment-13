@@ -17,14 +17,14 @@ public class UserController {
 
 	@GetMapping("/register")
 	public String showRegistrationForm(Model model) {
-		model.addAttribute("user", new User());  // Pass an empty User object to the form
+		model.addAttribute("user", new User());
 		return "register";
 	}
 
 	@PostMapping("/register")
 	public String registerUser(User user) {
-		userService.saveUser(user, true);  // Save user and create default accounts
-		return "redirect:/users";  // Redirect to user list after registration
+		userService.saveUser(user, true);
+		return "redirect:/users";
 	}
 
 	@GetMapping("/users")
@@ -46,8 +46,15 @@ public class UserController {
 	}
 
 	@PostMapping("/users/{userId}")
-	public String updateUser(@PathVariable Long userId, User user) {
-		userService.saveUser(user, false);
+	public String updateUser(@PathVariable Long userId, User updatedUser) {
+		User existingUser = userService.findById(userId);
+
+		if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
+			updatedUser.setPassword(existingUser.getPassword());
+		}
+
+		userService.saveUser(updatedUser, false);
+
 		return "redirect:/users";
 	}
 
