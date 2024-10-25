@@ -58,4 +58,19 @@ public class AccountController {
 
         return "redirect:/users/" + userId;
     }
+
+    @GetMapping("/users/{userId}/accounts/{accountId}")
+    public String getAccountDetails(@PathVariable Long userId, @PathVariable Long accountId, Model model) {
+        User user = userService.findById(userId);
+        Account account = accountService.findById(accountId);
+
+        if (user != null && account != null && user.getAccounts().contains(account)) {
+            model.addAttribute("user", user);
+            model.addAttribute("account", account);
+            return "account"; // Ensure this template exists
+        } else {
+            return "error";
+        }
+    }
+
 }
