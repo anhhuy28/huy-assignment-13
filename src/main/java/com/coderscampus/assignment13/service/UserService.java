@@ -54,47 +54,50 @@ public class UserService {
 	}
 
 	public User saveUser(User user, boolean createDefaultAccounts) {
+		if (user.getUserId() == null) {
+			user = userRepo.save(user);
+		} else {
+			User existingUser = userRepo.findById(user.getUserId())
+					.orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-		User existingUser = userRepo.findById(user.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+			existingUser.setName(user.getName());
+			existingUser.setUsername(user.getUsername());
 
-		existingUser.setName(user.getName());
-		existingUser.setUsername(user.getUsername());
-
-		if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-			existingUser.setPassword(user.getPassword());
+			if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+				existingUser.setPassword(user.getPassword());
+			}
+			user = existingUser;
 		}
 
-		Address existingAddress = existingUser.getAddress();
 		Address newAddress = user.getAddress();
-
-		if (existingAddress != null && newAddress != null) {
-			existingAddress.setAddressLine1(newAddress.getAddressLine1());
-			existingAddress.setAddressLine2(newAddress.getAddressLine2());
-			existingAddress.setCity(newAddress.getCity());
-			existingAddress.setRegion(newAddress.getRegion());
-			existingAddress.setCountry(newAddress.getCountry());
-			existingAddress.setZipCode(newAddress.getZipCode());
-		} else if (existingAddress == null && newAddress != null) {
-			existingUser.setAddress(newAddress);
-			newAddress.setUser(existingUser);
+		if (newAddress != null) {
+			Address addressToSave = user.getAddress() != null ? user.getAddress() : new Address();
+			addressToSave.setAddressLine1(newAddress.getAddressLine1());
+			addressToSave.setAddressLine2(newAddress.getAddressLine2());
+			addressToSave.setCity(newAddress.getCity());
+			addressToSave.setRegion(newAddress.getRegion());
+			addressToSave.setCountry(newAddress.getCountry());
+			addressToSave.setZipCode(newAddress.getZipCode());
+			addressToSave.setUser(user);
+			user.setAddress(addressToSave);
 		}
 
-		if (existingUser.getUserId() == null && createDefaultAccounts) {
+		if (createDefaultAccounts) {
 			Account checking = new Account();
 			checking.setAccountName("Checking Account");
-			checking.getUsers().add(existingUser);
+			checking.getUsers().add(user);
 
 			Account savings = new Account();
 			savings.setAccountName("Savings Account");
-			savings.getUsers().add(existingUser);
+			savings.getUsers().add(user);
 
-			existingUser.getAccounts().add(checking);
-			existingUser.getAccounts().add(savings);
+			user.getAccounts().add(checking);
+			user.getAccounts().add(savings);
 			accountRepo.save(checking);
 			accountRepo.save(savings);
 		}
 
-		return userRepo.save(existingUser);
+		return userRepo.save(user);
 	}
 
 	public void delete(Long userId) {
