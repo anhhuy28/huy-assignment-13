@@ -66,33 +66,40 @@ public class UserService {
 			if (user.getPassword() != null && !user.getPassword().isEmpty()) {
 				existingUser.setPassword(user.getPassword());
 			}
+
+			user.setAccounts(existingUser.getAccounts());
+
+			Address existingAddress = existingUser.getAddress();
+			Address newAddress = user.getAddress();
+
+			if (newAddress != null) {
+				if (existingAddress != null) {
+					existingAddress.setAddressLine1(newAddress.getAddressLine1());
+					existingAddress.setAddressLine2(newAddress.getAddressLine2());
+					existingAddress.setCity(newAddress.getCity());
+					existingAddress.setRegion(newAddress.getRegion());
+					existingAddress.setCountry(newAddress.getCountry());
+					existingAddress.setZipCode(newAddress.getZipCode());
+				} else {
+					existingUser.setAddress(newAddress);
+					newAddress.setUser(existingUser);
+				}
+			}
+
 			user = existingUser;
 		}
 
-		Address newAddress = user.getAddress();
-		if (newAddress != null) {
-			Address addressToSave = user.getAddress() != null ? user.getAddress() : new Address();
-			addressToSave.setAddressLine1(newAddress.getAddressLine1());
-			addressToSave.setAddressLine2(newAddress.getAddressLine2());
-			addressToSave.setCity(newAddress.getCity());
-			addressToSave.setRegion(newAddress.getRegion());
-			addressToSave.setCountry(newAddress.getCountry());
-			addressToSave.setZipCode(newAddress.getZipCode());
-			addressToSave.setUser(user);
-			user.setAddress(addressToSave);
-		}
-
-		if (createDefaultAccounts) {
+		if (createDefaultAccounts && user.getAccounts().isEmpty()) {
 			Account checking = new Account();
 			checking.setAccountName("Checking Account");
 			checking.getUsers().add(user);
+			user.getAccounts().add(checking);
 
 			Account savings = new Account();
 			savings.setAccountName("Savings Account");
 			savings.getUsers().add(user);
-
-			user.getAccounts().add(checking);
 			user.getAccounts().add(savings);
+
 			accountRepo.save(checking);
 			accountRepo.save(savings);
 		}

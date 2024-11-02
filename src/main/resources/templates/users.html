@@ -7,6 +7,12 @@
 
 <h1>All Users</h1>
 
+<div>
+	<a href="/register">
+		<button type="button">Register New User</button>
+	</a>
+</div>
+
 <div th:if="${users != null}">
 	<div th:each="user : ${users}">
 		<a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.userId}"></a><br />
